@@ -90,7 +90,7 @@ func (ct *PayoutController) DeletePayout(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("payout deleted: %v", &id),
+		"message": fmt.Sprintf("payout deleted: %v", id),
 	})
 
 }
