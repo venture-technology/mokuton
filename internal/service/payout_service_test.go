@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"testing"
@@ -44,10 +45,22 @@ func newPostgres(dbConfig config.Database) string {
 }
 
 func mockPayout() models.Payout {
+
+	payoutData := map[string]interface{}{
+		"amount":   100,
+		"currency": "USD",
+	}
+
+	payout, err := json.Marshal(payoutData)
+	if err != nil {
+		panic(err)
+	}
+
 	return models.Payout{
-		Payout: "{'amount': '100.0', 'created_at': '2024-06-23', 'currency': 'USD'}",
+		Payout: payout,
 		Route:  "vtx-payout-mock-service/payout/test",
 	}
+
 }
 
 func TestCreatePayout(t *testing.T) {
