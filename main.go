@@ -7,7 +7,11 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 	"github.com/venture-technology/vtx-payout-microservice-user/config"
+	"github.com/venture-technology/vtx-payout-microservice-user/internal/controller"
+	"github.com/venture-technology/vtx-payout-microservice-user/internal/repository"
+	"github.com/venture-technology/vtx-payout-microservice-user/internal/service"
 )
 
 func main() {
@@ -29,7 +33,12 @@ func main() {
 
 	router := gin.Default()
 
+	payoutRepository := repository.NewPayoutRepository(db)
+	payoutService := service.NewPayoutService(payoutRepository)
+	payoutController := controller.NewPayoutController(payoutService)
 	log.Printf("initing service: %s", config.Name)
+	payoutController.RegisterRoutes(router)
+
 	router.Run(fmt.Sprintf(":%d", config.Server.Port))
 
 }
